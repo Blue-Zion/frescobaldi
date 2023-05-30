@@ -39,49 +39,65 @@ class ListEdit(QWidget):
 
     def __init__(self, *args, **kwargs):
         QWidget.__init__(self, *args, **kwargs)
-        layout = QGridLayout(self)
-        self.setLayout(layout)
+        layout = QGridLayout(self)#The new grid layout  is call layout
+        self.setLayout(layout)#It Constructs a new grid layout.This layout divides the space into rows and columns.
 
-        self.addButton = QPushButton(icons.get('list-add'), '')
-        self.editButton = QPushButton(icons.get('document-edit'), '')
-        self.removeButton = QPushButton(icons.get('list-remove'), '')
-        self.listBox = QListWidget()
+        
+        self.addButton = QPushButton(icons.get('list-add'), '')#It Provides an Add button
+        self.editButton = QPushButton(icons.get('document-edit'), '')#It Provides an Edit button
+        self.removeButton = QPushButton(icons.get('list-remove'), '')# It Provides a Remove button
+        self.listBox = QListWidget()#It Provides a list view 
 
-        layout.setContentsMargins(1, 1, 1, 1)
-        layout.setSpacing(0)
-        layout.addWidget(self.listBox, 0, 0, 8, 1)
-        layout.addWidget(self.addButton, 0, 1)
-        layout.addWidget(self.editButton, 1, 1)
-        layout.addWidget(self.removeButton, 2, 1)
+        """Add childs widget on layout ,and spacing and margins between each ones"""
+        """                          v v v v v v v v                           """
 
+        layout.setContentsMargins(1, 1, 1, 1)#SizeConstraint { SetDefaultConstraint, SetFixedSize, SetMinimumSize, SetMaximumSize, SetMinAndMaxSize, SetNoConstraint }
+        layout.setSpacing(0)#
+        layout.addWidget(self.listBox, 0, 0, 8, 1)#
+        layout.addWidget(self.addButton, 1, 1)#first number is the up-bottom position , seconde number is the left-right position
+        layout.addWidget(self.editButton, 2, 1)#first number is the up-bottom position , seconde number is the left-right position
+        layout.addWidget(self.removeButton, 3, 1)#first number is the up-bottom position , seconde number is the left-right position
+
+        """ The buttons are unable/able when the list is empty/not empty  """
+        """                       v v v v                                 """
         self.changed.connect(self.updateSelection)
         self.listBox.itemSelectionChanged.connect(self.updateSelection)
         self.updateSelection()
         self.connectSlots()
         app.translateUI(self)
-
+    
+    
     def connectSlots(self):
-        self.addButton.clicked.connect(self.addClicked)
-        self.editButton.clicked.connect(self.editClicked)
-        self.removeButton.clicked.connect(self.removeClicked)
-        self.listBox.itemDoubleClicked.connect(self.itemDoubleClicked)
+        """Add action to buttons"""
+        self.addButton.clicked.connect(self.addClicked)#Connect the add button to the fonction addClicked
+        self.editButton.clicked.connect(self.editClicked)#Connect the edit button to the fonction editClicked
+        self.removeButton.clicked.connect(self.removeClicked)#Connect the remove button to the fonction removeClicked
+        self.listBox.itemDoubleClicked.connect(self.itemDoubleClicked)#Connect the listbox to the fonction itemDoubleClicked
         self.listBox.model().layoutChanged.connect(self.changed)
 
+    
+
     def translateUI(self):
+        """Add text  to buttons ,internationalization """
         self.addButton.setText(_("&Add..."))
         self.editButton.setText(_("&Edit..."))
         self.removeButton.setText(_("&Remove"))
+    
 
+     
     def addClicked(self, button):
+        """ Fonction connected to button add """
         item = self.createItem()
         if self.openEditor(item):
             self.addItem(item)
 
     def editClicked(self, button):
+        """ Fonction connected to button edit """
         item = self.listBox.currentItem()
         item and self.editItem(item)
 
     def removeClicked(self, button):
+        """ Fonction connected to button remove """
         item = self.listBox.currentItem()
         if item:
             self.removeItem(item)

@@ -127,17 +127,22 @@ class Versions(preferences.Group):
 class InfoList(widgets.listedit.ListEdit):
     def __init__(self, group):
         self.defaultButton = QPushButton()
+        self.dlAddButton = QPushButton()#New button Download and Add
         super(InfoList, self).__init__(group)
+        self.layout().addWidget(self.dlAddButton, 0, 1)# where the new button Download and Add take place
         self.layout().addWidget(self.defaultButton, 3, 1)
         self.layout().addWidget(self.listBox, 0, 0, 5, 1)
         self.listBox.itemSelectionChanged.connect(self._selectionChanged)
 
     def _selectionChanged(self):
         self.defaultButton.setEnabled(bool(self.listBox.currentItem()))
+        
 
     def translateUI(self):
         super(InfoList, self).translateUI()
         self.defaultButton.setText(_("Set as &Default"))
+        self.dlAddButton.setText( ("Download and &Add "))#Give a name to the new button Download and Add
+        self.addButton.setText(_("Add from &Files"))#Rename the button Add in Add from files 
 
     def infoDialog(self):
         try:

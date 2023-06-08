@@ -5,53 +5,11 @@ from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 import os
 from PyQt5.QtCore import QStandardPaths
-from PyQt5.QtCore import QSettings, Qt
-from PyQt5.QtWidgets import (QAbstractItemView, QDialog, QDialogButtonBox,
- QFileDialog,QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem,
- QPushButton,QComboBox, QVBoxLayout, QWidget)
-
-
-
-#def settings():
-    #s = QSettings()
-    #s.beginGroup("lilypond_settings")
-    #return s
-
-#class WinDlLily(QDialog):
-
-    #def __init__(self, parent):
-    #super(InfoDialog, self).__init__(parent)
-    #self.setWindowModality(Qt.WindowModal)
 
 
 
 
-    """Combo box """
-    #combobox = QComboBox()
-    #combobox.addItems(result)# add list result here
-    """"""
-    #layout = QVBoxLayout()
-    #layout.addWidget(combobox)
-    #layout.setSpacing(10)
-    #self.setLayout(layout)
-    #b = self.buttons = QDialogButtonBox(self)
-    #layout.addWidget(b)
-
-    #b.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-    #b.accepted.connect(self.accept)
-    #b.rejected.connect(self.reject)
-    #userguide.addButton(b, "prefs_lilypond")
-    #app.translateUI(self)
-    #qutil.saveDialogSize(self, "/preferences/lilypond/lilypondinfo/dialog/size")
-
-
-    #def translateUI(self):
-        #self.setWindowTitle(app.caption(_("LilyPond")))
-        #super(InfoList, self).translateUI()
-        #WinRealises.setWindowTitle(_translate("WinRealises", "Get my Lilypond"))
-
-       
- 
+class get_lily :
 
 
     def get_all_lilypond_versions():
@@ -108,23 +66,23 @@ from PyQt5.QtWidgets import (QAbstractItemView, QDialog, QDialogButtonBox,
                 except:
                     print("unrecognized archive format for the download")
 
-    download_lilypond((2, 25, 5))
+
   
-                    if platform.system() == 'Linux' :
-                        try:
-                            os.system('sudo apt install -y <package_name>')
-                        except:
-                            exit("Failed to install Lilypond")
-                    elif platform.system() == 'Windows' :
-                        try:
-                            os.system('winget install<Software_name>')
-                        except:
-                            exit("Failed to install Lilypond <Software_name>")
-                    elif platform.system() == 'Darwin' :
-                        try:
-                            os.system('<Software_name>')#A finir
-                        except:
-                            exit("Failed to install Lilypond <Software_name>")    
+                    #if platform.system() == 'Linux' :
+                        #try:
+                            #os.system('sudo apt install -y <package_name>')
+                        #except:
+                            #exit("Failed to install Lilypond")
+                    #elif platform.system() == 'Windows' :
+                        #try:
+                            #os.system('winget install<Software_name>')
+                        #except:
+                            #exit("Failed to install Lilypond <Software_name>")
+                    #elif platform.system() == 'Darwin' :
+                        #try:
+                            #os.system('<Software_name>')#A finir
+                        #except:
+                            #exit("Failed to install Lilypond <Software_name>")    
     #
     #
     #
@@ -134,3 +92,9 @@ from PyQt5.QtWidgets import (QAbstractItemView, QDialog, QDialogButtonBox,
     #uninstall software windows:
     #os.system(f'wmic product where description = (name software) unistall
     #
+
+
+
+if __name__ == '__main__':
+    a_game = Comm_system()
+    a_game.run()

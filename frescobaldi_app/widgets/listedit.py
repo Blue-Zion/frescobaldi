@@ -42,11 +42,11 @@ class ListEdit(QWidget):
         layout = QGridLayout(self)#The new grid layout  is call layout
         self.setLayout(layout)#It Constructs a new grid layout.This layout divides the space into rows and columns.
 
-        
+
         self.addButton = QPushButton(icons.get('list-add'), '')#It Provides an Add button
         self.editButton = QPushButton(icons.get('document-edit'), '')#It Provides an Edit button
         self.removeButton = QPushButton(icons.get('list-remove'), '')# It Provides a Remove button
-        self.listBox = QListWidget()#It Provides a list view 
+        self.listBox = QListWidget()#It Provides a list view
 
         """Add childs widget on layout ,and spacing and margins between each ones"""
         """                          v v v v v v v v                           """
@@ -65,8 +65,8 @@ class ListEdit(QWidget):
         self.updateSelection()
         self.connectSlots()
         app.translateUI(self)
-    
-    
+
+
     def connectSlots(self):
         """Add action to buttons"""
         self.addButton.clicked.connect(self.addClicked)#Connect the add button to the fonction addClicked
@@ -75,16 +75,16 @@ class ListEdit(QWidget):
         self.listBox.itemDoubleClicked.connect(self.itemDoubleClicked)#Connect the listbox to the fonction itemDoubleClicked
         self.listBox.model().layoutChanged.connect(self.changed)
 
-    
+
 
     def translateUI(self):
         """Add text  to buttons ,internationalization """
         self.addButton.setText(_("&Add..."))
         self.editButton.setText(_("&Edit..."))
         self.removeButton.setText(_("&Remove"))
-    
 
-     
+
+
     def addClicked(self, button):
         """ Fonction connected to button add """
         item = self.createItem()

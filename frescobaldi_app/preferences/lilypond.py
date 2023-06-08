@@ -130,19 +130,22 @@ class InfoList(widgets.listedit.ListEdit):
         self.dlAddButton = QPushButton()#New button Download and Add
         super(InfoList, self).__init__(group)
         self.layout().addWidget(self.dlAddButton, 0, 1)# where the new button Download and Add take place
+        self.layout().addWidget(self.addButton, 1, 1)
+        self.layout().addWidget(self.removeButton, 2, 1)
         self.layout().addWidget(self.defaultButton, 3, 1)
         self.layout().addWidget(self.listBox, 0, 0, 5, 1)
+        self.dlAddButton.clicked.connect(self.dlAddClicked)
         self.listBox.itemSelectionChanged.connect(self._selectionChanged)
 
     def _selectionChanged(self):
         self.defaultButton.setEnabled(bool(self.listBox.currentItem()))
-        
+
 
     def translateUI(self):
         super(InfoList, self).translateUI()
         self.defaultButton.setText(_("Set as &Default"))
         self.dlAddButton.setText( ("Download and &Add "))#Give a name to the new button Download and Add
-        self.addButton.setText(_("Add from &Files"))#Rename the button Add in Add from files 
+        self.addButton.setText(_("Add from &Files"))#Rename the button Add in Add from files
 
     def infoDialog(self):
         try:
@@ -150,6 +153,13 @@ class InfoList(widgets.listedit.ListEdit):
         except AttributeError:
             self._infoDialog = InfoDialog(self)
             return self._infoDialog
+
+    def dlInfoDialog(self):
+        try:
+            return self._dlInfoDialog
+        except AttributeError:
+            self._dlInfoDialog = DlInfoDialog(self)
+            return self._dlInfoDialog
 
     def createItem(self):
         return InfoItem(lilypondinfo.LilyPondInfo("lilypond"))
@@ -170,6 +180,19 @@ class InfoList(widgets.listedit.ListEdit):
         item.display()
         self.setCurrentItem(item)
 
+    def dlAddClicked(self, button):
+        item = self.createItem()
+        if self.dlOpenEditor(item):
+            self.addItem(item)
+
+    def dlOpenEditor(self, item):
+        dlg = self.dlInfoDialog()
+        if dlg.exec_():
+            item._info = dlg.newInfo()
+            return True
+        return False
+
+
 
 class InfoItem(QListWidgetItem):
     def __init__(self, info):
@@ -185,6 +208,24 @@ class InfoItem(QListWidgetItem):
         if self._info.command == self.listWidget().parentWidget().parentWidget()._defaultCommand:
             text += " [{0}]".format(_("default"))
         self.setText(text)
+
+
+class DlInfoDialog(QDialog):
+    def __init__(self, parent):
+        super(DlInfoDialog, self).__init__(parent)
+        self.setWindowModality(Qt.WindowModal)
+        layout = QVBoxLayout()
+        layout.setSpacing(10)
+        self.setLayout(layout)
+        b = self.buttons = QDialogButtonBox(self)
+        b.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        b.accepted.connect(self.accept)
+        b.rejected.connect(self.reject)
+        layout.addWidget(b)
+
+    def newInfo(self):
+        return lilypondinfo.default()
+
 
 
 class InfoDialog(QDialog):

@@ -65,36 +65,5 @@ class get_lily :
                     unpack_archive(tfile.name, dest,format="gztar") # faire un try pour linux et darwin
                 except:
                     print("unrecognized archive format for the download")
-
-
   
-                    #if platform.system() == 'Linux' :
-                        #try:
-                            #os.system('sudo apt install -y <package_name>')
-                        #except:
-                            #exit("Failed to install Lilypond")
-                    #elif platform.system() == 'Windows' :
-                        #try:
-                            #os.system('winget install<Software_name>')
-                        #except:
-                            #exit("Failed to install Lilypond <Software_name>")
-                    #elif platform.system() == 'Darwin' :
-                        #try:
-                            #os.system('<Software_name>')#A finir
-                        #except:
-                            #exit("Failed to install Lilypond <Software_name>")    
-    #
-    #
-    #
-    #
-    #
-    #
-    #uninstall software windows:
-    #os.system(f'wmic product where description = (name software) unistall
-    #
 
-
-
-if __name__ == '__main__':
-    a_game = Comm_system()
-    a_game.run()

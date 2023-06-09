@@ -9,7 +9,7 @@ from PyQt5.QtCore import QStandardPaths
 
 
 
-class get_lily :
+class get_my_lily :
 
 
     def get_all_lilypond_versions():

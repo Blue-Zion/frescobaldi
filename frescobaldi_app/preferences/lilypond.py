@@ -25,12 +25,15 @@ LilyPond preferences page
 import os
 import sys
 
+
 from PyQt5.QtCore import QSettings, Qt
 from PyQt5.QtWidgets import (
     QAbstractItemView, QCheckBox, QDialog, QDialogButtonBox, QFileDialog,
     QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem,
     QPushButton, QRadioButton, QTabWidget, QVBoxLayout, QWidget,QComboBox)
+from PyQt5.QtCore import QStandardPaths
 
+import shutil
 import app
 import userguide
 import qutil
@@ -134,7 +137,7 @@ class InfoList(widgets.listedit.ListEdit):
         self.layout().addWidget(self.removeButton, 2, 1)
         self.layout().addWidget(self.defaultButton, 3, 1)
         self.layout().addWidget(self.listBox, 0, 0, 5, 1)
-        self.dlAddButton.clicked.connect(self.dlAddClicked)#connect
+        self.dlAddButton.clicked.connect(self.dlAddClicked)#Connect the add button to the fonction addClicked
         self.listBox.itemSelectionChanged.connect(self._selectionChanged)
 
     def _selectionChanged(self):
@@ -163,6 +166,12 @@ class InfoList(widgets.listedit.ListEdit):
 
     def createItem(self):
         return InfoItem(lilypondinfo.LilyPondInfo("lilypond"))
+    
+    #def goodbeylily(self):
+        #try :
+            #shutil.rmtree(QStandardPaths.writableLocation(QStandardPaths.DataLocation))
+            #except OSError as e:
+                #print(f"error:{e.strerror}")
 
     def openEditor(self, item):
         dlg = self.infoDialog()
@@ -181,6 +190,7 @@ class InfoList(widgets.listedit.ListEdit):
         self.setCurrentItem(item)
 
     def dlAddClicked(self, button):
+        """ Fonction connected to button download and add """
         item = self.createItem()
         if self.dlOpenEditor(item):
             self.addItem(item)
@@ -212,26 +222,37 @@ class InfoItem(QListWidgetItem):
 
 class DlInfoDialog(QDialog):
     def __init__(self, parent):
-        from get_lily import result
+    
         super(DlInfoDialog, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
+
         layout = QVBoxLayout()
         layout.setSpacing(10)
         self.setLayout(layout)
-        self.versionSelector = QComboBox()
-        self.layout.addWidget(self.versionSelector)
-    def newInfo(self):
-        index = self.versionSelector.currentIndex()
+
 
         """"combo box"""
         combobox = QComboBox()
-        combobox.addItems(result)# add list result here
+        combobox.addItems()# add list result here
+
+        layout = QVBoxLayout()
+        layout.setSpacing(10)
+        self.setLayout(layout)
+
+        layout.addWidget(combobox)
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+
 
         b = self.buttons = QDialogButtonBox(self)
         b.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         b.accepted.connect(self.accept)
         b.rejected.connect(self.reject)
         layout.addWidget(b)
+    
+    def newInfo(self):
+        index = self.versionSelector.currentIndex()
 
     def newInfo(self):
         return lilypondinfo.default()

@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QRadioButton, QTabWidget, QVBoxLayout, QWidget,QComboBox)
 from PyQt5.QtCore import QStandardPaths
 
-import shutil
+from shutil import rmtree
 import app
 import userguide
 import qutil
@@ -222,7 +222,7 @@ class InfoItem(QListWidgetItem):
 
 class DlInfoDialog(QDialog):
     def __init__(self, parent):
-    
+        from preferences import get_lily
         super(DlInfoDialog, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
 
@@ -233,7 +233,7 @@ class DlInfoDialog(QDialog):
 
         """"combo box"""
         combobox = QComboBox()
-        combobox.addItems()# add list result here
+        combobox.addItems(result)# add list result here
 
         layout = QVBoxLayout()
         layout.setSpacing(10)

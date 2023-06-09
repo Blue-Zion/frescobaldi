@@ -83,11 +83,6 @@ class ListEdit(QWidget):
         self.editButton.setText(_("&Edit..."))
         self.removeButton.setText(_("&Remove"))
 
-    def dlAddClicked(self, button):
-        """ Fonction connected to button download and add """
-        item = self.createItem()
-        if self.openEditor(item):
-            self.addItem(item)
 
     def addClicked(self, button):
         """ Fonction connected to button add """

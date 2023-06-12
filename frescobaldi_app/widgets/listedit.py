@@ -119,6 +119,11 @@ class ListEdit(QWidget):
 
     def removeItem(self, item):
         self.listBox.takeItem(self.listBox.row(item))
+        #try :
+            #shutil.rmtree(QStandardPaths.writableLocation(QStandardPaths.DataLocation.setCurrentItem())
+            #except OSError as e:
+                #print(f"error:{e.strerror}")
+        
         self.changed.emit()
 
     def editItem(self, item):

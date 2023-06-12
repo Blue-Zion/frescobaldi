@@ -33,6 +33,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QRadioButton, QTabWidget, QVBoxLayout, QWidget,QComboBox)
 from PyQt5.QtCore import QStandardPaths
 
+from get_lily import list
 from shutil import rmtree
 import app
 import userguide
@@ -169,7 +170,7 @@ class InfoList(widgets.listedit.ListEdit):
     
     #def goodbeylily(self):
         #try :
-            #shutil.rmtree(QStandardPaths.writableLocation(QStandardPaths.DataLocation))
+            #shutil.rmtree(QStandardPaths.writableLocation(QStandardPaths.DataLocation.??? :lilypond-v{major}.{minor}.{micro} QListWidgetItem?))
             #except OSError as e:
                 #print(f"error:{e.strerror}")
 
@@ -221,8 +222,12 @@ class InfoItem(QListWidgetItem):
 
 
 class DlInfoDialog(QDialog):
+
+
     def __init__(self, parent):
-        from preferences import get_lily
+
+        
+
         super(DlInfoDialog, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
 
@@ -233,7 +238,7 @@ class DlInfoDialog(QDialog):
 
         """"combo box"""
         combobox = QComboBox()
-        combobox.addItems(result)# add list result here
+        combobox.addItems(list)# add list result here
 
         layout = QVBoxLayout()
         layout.setSpacing(10)

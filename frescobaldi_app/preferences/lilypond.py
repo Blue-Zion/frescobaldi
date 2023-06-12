@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QRadioButton, QTabWidget, QVBoxLayout, QWidget,QComboBox)
 from PyQt5.QtCore import QStandardPaths
 
-from get_lily import list
+
 from shutil import rmtree
 import app
 import userguide
@@ -44,7 +44,6 @@ import lilypondinfo
 import qsettings
 import widgets.listedit
 import widgets.urlrequester
-
 
 def settings():
     s = QSettings()
@@ -225,8 +224,7 @@ class DlInfoDialog(QDialog):
 
 
     def __init__(self, parent):
-
-        
+        global result
 
         super(DlInfoDialog, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
@@ -235,11 +233,20 @@ class DlInfoDialog(QDialog):
         layout.setSpacing(10)
         self.setLayout(layout)
 
+        """combo box"""
 
-        """"combo box"""
-        combobox = QComboBox()
-        combobox.addItems(list)# add list result here
-        
+        layout = QVBoxLayout()
+        layout.setSpacing(10)
+        self.setLayout(layout)
+
+        for version in result:
+            combobox = QComboBox()
+            combobox.addItem("texte pour la version...")
+            result = ["200", "200"] # TODO
+            combobox.addItems(result)
+            layout.addWidget(combobox)
+
+
         layout = QVBoxLayout()
         layout.setSpacing(10)
         self.setLayout(layout)
@@ -247,14 +254,12 @@ class DlInfoDialog(QDialog):
         layout.addWidget(combobox)
         container = QWidget()
         container.setLayout(layout)
-        self.setCentralWidget(container)
 
 
         b = self.buttons = QDialogButtonBox(self)
         b.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         b.accepted.connect(self.accept)
         b.rejected.connect(self.reject)
-        self.OK.clicked.connect(self.download_lilypond)#Connect the ok button to the fonction addClicked # connect fonction for download
 
         layout.addWidget(b)
     

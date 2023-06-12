@@ -167,12 +167,6 @@ class InfoList(widgets.listedit.ListEdit):
     def createItem(self):
         return InfoItem(lilypondinfo.LilyPondInfo("lilypond"))
     
-    #def goodbeylily(self):
-        #try :
-            #shutil.rmtree(QStandardPaths.writableLocation(QStandardPaths.DataLocation.??? :lilypond-v{major}.{minor}.{micro} QListWidgetItem?))
-            #except OSError as e:
-                #print(f"error:{e.strerror}")
-
     def openEditor(self, item):
         dlg = self.infoDialog()
         dlg.loadInfo(item._info)
@@ -224,7 +218,7 @@ class DlInfoDialog(QDialog):
 
 
     def __init__(self, parent):
-        global result
+        global version
 
         super(DlInfoDialog, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
@@ -264,10 +258,40 @@ class DlInfoDialog(QDialog):
         layout.addWidget(b)
     
     def newInfo(self):
-        index = self.versionSelector.currentIndex()
+        
+        ''' Download according to the operating system user'''
+        major, minor, micro = version
+        if platform.system() == 'Darwin':
+            archive = f"lilypond-{major}.{minor}.{micro}-darwin-x86_64.tar.gz"
+            lily_url = f"https://gitlab.com/lilypond/lilypond/-/releases/v{major}.{minor}.{micro}/downloads/{archive}"
+        elif platform.system() == 'Linux':
+            archive = f"lilypond-{major}.{minor}.{micro}-linux-x86_64.tar.gz"
+            lily_url = f"https://gitlab.com/lilypond/lilypond/-/releases/v{major}.{minor}.{micro}/downloads/{archive}"
+        elif platform.system() == 'Windows':
+            archive = f"lilypond-{major}.{minor}.{micro}-mingw-x86_64.zip"
+            lily_url = f"https://gitlab.com/lilypond/lilypond/-/releases/v{major}.{minor}.{micro}/downloads/{archive}"
 
-    def newInfo(self):
+        # We download the compressed file in a tempory file and copy it
+        # to the destination
+        with urlopen(lily_url) as response, NamedTemporaryFile() as tfile:
+            copyfileobj(response, tfile)
+            dest = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
+            print(dest)
+            if platform.system() == 'Windows' :
+                try : 
+                    unpack_archive(tfile.name, dest,format="zip") #Unpack for windows
+                except:
+                    print("unrecognized archive format for the .zip download")
+            elif platform.system() != 'Windows':
+                try :
+                    unpack_archive(tfile.name, dest,format="gztar") # Unpack for linux et darwin
+                except:
+                    print("unrecognized archive format for the .tar download")
+                
+
+        index = self.versionSelector.currentIndex()
         return lilypondinfo.default()
+        
 
 
 

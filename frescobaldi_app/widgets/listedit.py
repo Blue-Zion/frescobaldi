@@ -119,6 +119,15 @@ class ListEdit(QWidget):
 
     def removeItem(self, item):
         self.listBox.takeItem(self.listBox.row(item))
+
+    
+        #
+        #import os
+        #if os.path.dirname(os.path.abspath(setCurrentItem)) == os.path.dirname(self.bindir())
+        #
+
+
+
         #if os.path.exists(QStandardPaths.writableLocation(QStandardPaths.DataLocation.setCurrentItem) :
             #try :
                 #shutil.rmtree(item._info)

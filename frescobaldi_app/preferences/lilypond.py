@@ -21,16 +21,19 @@
 LilyPond preferences page
 """
 
-
+import json
 import os
+import platform
+from shutil import copyfileobj, unpack_archive
 import sys
-
+from tempfile import NamedTemporaryFile
+from urllib.request import urlopen
 
 from PyQt5.QtCore import QSettings, Qt
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QCheckBox, QDialog, QDialogButtonBox, QFileDialog,
+    QAbstractItemView, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog,
     QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem,
-    QPushButton, QRadioButton, QTabWidget, QVBoxLayout, QWidget,QComboBox)
+    QMessageBox, QPushButton, QRadioButton, QTabWidget, QVBoxLayout, QWidget)
 from PyQt5.QtCore import QStandardPaths
 
 
@@ -166,7 +169,7 @@ class InfoList(widgets.listedit.ListEdit):
 
     def createItem(self):
         return InfoItem(lilypondinfo.LilyPondInfo("lilypond"))
-    
+
     def openEditor(self, item):
         dlg = self.infoDialog()
         dlg.loadInfo(item._info)
@@ -215,11 +218,7 @@ class InfoItem(QListWidgetItem):
 
 
 class DlInfoDialog(QDialog):
-
-
     def __init__(self, parent):
-        global version
-
         super(DlInfoDialog, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
 
@@ -227,28 +226,17 @@ class DlInfoDialog(QDialog):
         layout.setSpacing(10)
         self.setLayout(layout)
 
-        """combo box"""
+        self.versions = self.get_all_lilypond_versions()
+        self.combobox = QComboBox()
+        layout.addWidget(self.combobox)
 
-        layout = QVBoxLayout()
-        layout.setSpacing(10)
-        self.setLayout(layout)
-
-        for version in result:
-            combobox = QComboBox()
-            combobox.addItem("texte pour la version...")
-            result = ["200", "200"] # TODO
-            combobox.addItems(result)
-            layout.addWidget(combobox)
-
-
-        layout = QVBoxLayout()
-        layout.setSpacing(10)
-        self.setLayout(layout)
-
-        layout.addWidget(combobox)
-        container = QWidget()
-        container.setLayout(layout)
-
+        for version in self.versions:
+            major, minor, micro = version
+            if minor%2 == 0:
+                display = _("{major}.{minor}.{micro} (stable)")
+            else:
+                display = _("{major}.{minor}.{micro} (unstable)")
+            self.combobox.addItem(display.format(major=major, minor=minor, micro=micro))
 
         b = self.buttons = QDialogButtonBox(self)
         b.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -256,10 +244,34 @@ class DlInfoDialog(QDialog):
         b.rejected.connect(self.reject)
 
         layout.addWidget(b)
-    
+
+    def get_all_lilypond_versions(self):
+        '''Open and read the .json'''
+
+        url = "https://gitlab.com/api/v4/projects/18695663/releases"
+        response = urlopen(url)
+        content = response.read()
+        if response.getcode() == 200 :#The status code 200 means that the response is OK.
+            json_decode = json.loads(content.decode("utf8"))
+        else:
+            QMessageBox.critical(None, _("cannot download list of LilyPond versions"))
+            return []
+        result = []
+        for item in json_decode:
+            tag = item ['tag_name']
+            if tag == "release/2.22.2-1" :
+                continue
+            tag = tag.lstrip("v") # We just want numbers , so we erase the "v"
+            tag_split = tag.split(".") # Split each number (tuplet)
+            version = [int(v) for v in tag_split] # Conversion into integer
+            result.append(version)
+        result.sort() # We sort the result
+        return result
+
     def newInfo(self):
-        
-        ''' Download according to the operating system user'''
+        """Download according to the operating system."""
+        index = self.combobox.currentIndex()
+        version = self.versions[index]
         major, minor, micro = version
         if platform.system() == 'Darwin':
             archive = f"lilypond-{major}.{minor}.{micro}-darwin-x86_64.tar.gz"
@@ -278,20 +290,22 @@ class DlInfoDialog(QDialog):
             dest = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
             print(dest)
             if platform.system() == 'Windows' :
-                try : 
+                try :
                     unpack_archive(tfile.name, dest,format="zip") #Unpack for windows
                 except:
                     print("unrecognized archive format for the .zip download")
+                    # TODO
+
             elif platform.system() != 'Windows':
                 try :
                     unpack_archive(tfile.name, dest,format="gztar") # Unpack for linux et darwin
                 except:
                     print("unrecognized archive format for the .tar download")
-                
+                    # TODO
 
-        index = self.versionSelector.currentIndex()
-        return lilypondinfo.default()
-        
+        command = f"{dest}/lilypond-{major}.{minor}.{micro}/bin/lilypond"
+        return lilypondinfo.LilyPondInfo(command)
+
 
 
 

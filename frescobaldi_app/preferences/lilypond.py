@@ -239,7 +239,7 @@ class DlInfoDialog(QDialog):
         """"combo box"""
         combobox = QComboBox()
         combobox.addItems(list)# add list result here
-
+        
         layout = QVBoxLayout()
         layout.setSpacing(10)
         self.setLayout(layout)
@@ -254,6 +254,8 @@ class DlInfoDialog(QDialog):
         b.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         b.accepted.connect(self.accept)
         b.rejected.connect(self.reject)
+        self.OK.clicked.connect(self.download_lilypond)#Connect the ok button to the fonction addClicked # connect fonction for download
+
         layout.addWidget(b)
     
     def newInfo(self):

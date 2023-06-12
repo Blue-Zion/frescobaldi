@@ -3,9 +3,8 @@ import platform
 from shutil import copyfileobj, unpack_archive
 from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
-import os
-from PyQt5.QtCore import QStandardPaths
 
+from PyQt5.QtCore import QStandardPaths
 
 
 
@@ -14,12 +13,14 @@ class get_my_lily :
 
     def get_all_lilypond_versions():
         '''Open and read the .json'''
-        # TODO: handle "no network" case
+        
         url = "https://gitlab.com/api/v4/projects/18695663/releases"
         response = urlopen(url)
         content = response.read()
         if response.getcode() == 200 :#The status code 200 means that the response is OK.
             json_decode = json.loads(content.decode("utf8"))
+        else:
+            print ("a problem occurred when attempting to reach the json file" )
         result = []
 
         '''Put what we have find from a specific directory in the .json into a dictionary '''
@@ -57,13 +58,11 @@ class get_my_lily :
             print(dest)
             if platform.system() == 'Windows' :
                 try : 
-                    unpack_archive(tfile.name, dest,format="zip") # faire un try pour windows
+                    unpack_archive(tfile.name, dest,format="zip") #Unpack for windows
                 except:
-                    print("unrecognized archive format for the download")
+                    print("unrecognized archive format for the .zip download")
             elif platform.system() != 'Windows':
                 try :
-                    unpack_archive(tfile.name, dest,format="gztar") # faire un try pour linux et darwin
+                    unpack_archive(tfile.name, dest,format="gztar") # Unpack for linux et darwin
                 except:
-                    print("unrecognized archive format for the download")
-  
-
+                    print("unrecognized archive format for the .tar download")

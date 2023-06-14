@@ -199,6 +199,15 @@ class InfoList(widgets.listedit.ListEdit):
             return True
         return False
 
+    def removeItem(self, item):
+        super().removeItem(item)
+        internal_location = QStandardPaths.writableLocation(QStandardPaths.DataLocation)
+        if internal_location == os.path.dirname(item._info.prefix()):
+            try:
+                rmtree(item._info.prefix())
+            except OSError as e:
+                print(f"error:{e.strerror}") # TODO
+
 
 
 class InfoItem(QListWidgetItem):

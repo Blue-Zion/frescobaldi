@@ -137,8 +137,9 @@ class InfoList(widgets.listedit.ListEdit):
         super(InfoList, self).__init__(group)
         self.layout().addWidget(self.dlAddButton, 0, 1)# where the new button Download and Add take place
         self.layout().addWidget(self.addButton, 1, 1)
-        self.layout().addWidget(self.removeButton, 2, 1)
-        self.layout().addWidget(self.defaultButton, 3, 1)
+        self.layout().addWidget(self.editButton, 2, 1)
+        self.layout().addWidget(self.removeButton, 3, 1)
+        self.layout().addWidget(self.defaultButton, 4, 1)
         self.layout().addWidget(self.listBox, 0, 0, 5, 1)
         self.dlAddButton.clicked.connect(self.dlAddClicked)#Connect the add button to the fonction addClicked
         self.listBox.itemSelectionChanged.connect(self._selectionChanged)
